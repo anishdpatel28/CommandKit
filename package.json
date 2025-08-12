@@ -83,7 +83,27 @@
       "icon": "electron/assets/icon.icns"
     },
     "win": {
-      "icon": "electron/assets/icon.ico"
+      "icon": "electron/assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["arm64", "x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["arm64", "x64"]
+        }
+      ],
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CommandKit",
+      "deleteAppDataOnUninstall": true,
+      "runAfterFinish": true
     },
     "linux": {
       "icon": "electron/assets/icon.png"
