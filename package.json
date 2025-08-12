@@ -2,6 +2,7 @@
   "name": "commandkit",
   "version": "1.0.0",
   "description": "CommandKit - Umbrella application for developer tools",
+  "author": "Anish Patel",
   "main": "electron/main.js",
   "scripts": {
     "start": "react-native start",
