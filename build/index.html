@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CommandKit</title>
+  <script defer src="bundle.js"></script></head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      // Handle menu actions from Electron
+      if (window.require) {
+        const { ipcRenderer } = window.require("electron");
+
+        ipcRenderer.on("menu-action", (event, action) => {
+          console.log("Menu action:", action);
+          // Handle menu actions here
+          switch (action) {
+            case "new-project":
+              // Handle new project
+              break;
+            case "about":
+              // Handle about dialog
+              break;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
