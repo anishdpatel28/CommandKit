@@ -7,21 +7,21 @@
   <script defer src="bundle.js"></script></head>
   <body>
     <div id="root"></div>
-
+    
     <script>
-      // Handle menu actions from Electron
-      if (window.require) {
-        const { ipcRenderer } = window.require("electron");
-
-        ipcRenderer.on("menu-action", (event, action) => {
+      // Handle menu actions from Electron using secure API
+      if (window.electronAPI) {
+        window.electronAPI.onMenuAction((event, action) => {
           console.log("Menu action:", action);
           // Handle menu actions here
           switch (action) {
             case "new-project":
               // Handle new project
+              console.log("New project requested");
               break;
             case "about":
               // Handle about dialog
+              console.log("About dialog requested");
               break;
           }
         });
