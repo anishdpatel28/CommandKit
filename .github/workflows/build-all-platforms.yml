@@ -61,11 +61,13 @@ jobs:
 
       - name: Test Windows executable
         run: |
-          if (Test-Path "dist\win-arm64-unpacked\CommandKit.exe") {
+          if (Test-Path "dist\win-unpacked\CommandKit.exe") {
             Write-Host "✅ Windows executable created successfully"
-            Get-ChildItem "dist\win-arm64-unpacked\CommandKit.exe" | Select-Object Name, Length, LastWriteTime
+            Get-ChildItem "dist\win-unpacked\CommandKit.exe" | Select-Object Name, Length, LastWriteTime
           } else {
             Write-Host "❌ Windows executable not found"
+            Write-Host "Available files in dist:"
+            Get-ChildItem "dist\" -Recurse | Select-Object FullName
             exit 1
           }
 
