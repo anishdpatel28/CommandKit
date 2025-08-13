@@ -28,6 +28,13 @@ jobs:
       - name: Build for macOS
         run: npm run electron-pack -- --mac --publish never
 
+      - name: Remove quarantine attribute
+        run: |
+          if [ -d "dist/macos/CommandKit.app" ]; then
+            xattr -rd com.apple.quarantine dist/macos/CommandKit.app
+            echo "✅ Removed quarantine attribute from CommandKit.app"
+          fi
+
       - name: Upload macOS build artifacts
         uses: actions/upload-artifact@v4
         with:
