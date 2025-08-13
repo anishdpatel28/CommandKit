@@ -30,14 +30,11 @@ To build and develop CommandKit, you need:
 ### 2. Test the Application
 
 ```bash
-./test-app.sh
+npm run dev
 ```
 
-This script will:
-
-- Start the Metro bundler
-- Launch the application on your platform
-- Provide real-time feedback
+- Start the webpack dev server
+- Launch the Electron application
 
 ## Manual Installation
 
@@ -70,6 +67,9 @@ npm run build:linux
 
 # Build for macOS
 npm run build:macos
+
+# Build for all operating systems
+npm run build:all
 ```
 
 This creates standalone applications that can be distributed and run without development tools.
@@ -109,7 +109,6 @@ CommandKit/
 ├── public/                 # Web assets
 ├── package.json
 ├── setup.sh               # Automated setup script
-├── test-app.sh            # Test script
 └── README.md
 ```
 
