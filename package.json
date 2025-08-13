@@ -103,7 +103,9 @@
       "createStartMenuShortcut": true,
       "shortcutName": "CommandKit",
       "deleteAppDataOnUninstall": true,
-      "runAfterFinish": true
+      "runAfterFinish": false,
+      "perMachine": false,
+      "allowElevation": true
     },
     "linux": {
       "icon": "electron/assets/icon.png"
