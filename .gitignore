@@ -113,24 +113,7 @@ dist
 # OSX
 .DS_Store
 
-# Xcode
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-project.xcworkspace
+
 
 # Android/IntelliJ
 build/
@@ -167,15 +150,13 @@ buck-out/
 # Bundle artifacts
 *.jsbundle
 
-# CocoaPods
-/ios/Pods/
+
 
 # Expo
 .expo/
 web-build/
 
-# Flipper
-ios/Pods/Flipper*
+
 
 # Metro
 .metro-health-check*
@@ -355,21 +336,7 @@ out/
 web-build/
 web-simple/
 
-# iOS specific ignores
-ios/build/
-ios/DerivedData/
-ios/Pods/
-ios/*.xcworkspace/xcuserdata/
-ios/*.xcodeproj/xcuserdata/
-ios/*.xcodeproj/project.xcworkspace/xcuserdata/
-ios/.xcode.env.local
 
-# Keep iOS source files but ignore build artifacts
-!ios/CommandKit/
-!ios/CommandKit.xcodeproj/
-!ios/Podfile
-!ios/PrivacyInfo.xcprivacy
-!ios/.xcode.env
 
 # Ignore temporary files
 *.tmp

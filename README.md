@@ -8,14 +8,12 @@ A cross-platform desktop application for managing developer tools that simplify 
 - **Native performance**: Built with React Native for truly native widgets
 - **Project management**: Download, update, and run projects through the umbrella application
 
-## Prerequisites (Development - macOS Only)
+## Prerequisites (Development)
 
 To build and develop CommandKit, you need:
 
 - Node.js (v16 or later)
 - npm (v8 or later)
-- Xcode (for building the application)
-- CocoaPods (for dependency management)
 
 ## Quick Start
 
@@ -41,73 +39,44 @@ This script will:
 - Launch the application on your platform
 - Provide real-time feedback
 
-## Manual Installation (macOS)
+## Manual Installation
 
-1. **Install Xcode:**
-   - Download and install Xcode from the Mac App Store
-   - Install Xcode Command Line Tools:
-
-     ```bash
-     xcode-select --install
-     ```
-
-2. **Install CocoaPods:**
-
-   ```bash
-   sudo gem install cocoapods
-   ```
-
-3. **Install project dependencies:**
+1. **Install project dependencies:**
 
    ```bash
    npm install
-   cd ios && pod install && cd ..
    ```
 
-4. **Run the application:**
+2. **Run the application:**
 
    ```bash
-   # Start Metro bundler
-   npm start
+   # Start the development server
+   npm run dev
    
-   # In a new terminal, run the macOS app
-   npm run macos
+   # Or build and run the Electron app
+   npm run electron-pack
    ```
 
-## Building Standalone Applications
+## Building Applications
 
-### Build for macOS
+### Build for All Platforms
 
 ```bash
+# Build for Windows
+npm run build:windows
+
+# Build for Linux  
+npm run build:linux
+
+# Build for macOS
 npm run build:macos
 ```
 
-This creates a standalone `.app` file that can be distributed and run without development tools.
-
-### Build for Windows
-
-```bash
-npm run build:windows
-```
-
-This creates a standalone `.exe` file that can be distributed and run without development tools.
-
-### Build for Linux
-
-```bash
-npm run build:linux
-```
-
-This creates a standalone binary that can be distributed and run without development tools.
+This creates standalone applications that can be distributed and run without development tools.
 
 ## Running the Compiled Application
 
 Once you have built the standalone application, users can run it without any development dependencies:
-
-### Run on macOS
-
-- Double-click the `.app` file
-- Or run from terminal: `open CommandKit.app`
 
 ### Run on Windows
 
@@ -117,6 +86,11 @@ Once you have built the standalone application, users can run it without any dev
 ### Run on Linux
 
 - Run from terminal: `./CommandKit`
+
+### Run on macOS
+
+- Double-click the `.app` file
+- Or run from terminal: `open CommandKit.app`
 
 ## Project Structure
 
@@ -131,10 +105,8 @@ CommandKit/
 │   ├── theme/
 │   │   └── colors.ts
 │   └── App.tsx
-├── ios/                    # iOS/macOS native code
-├── android/                # Android native code
-├── windows/                # Windows native code
-├── linux/                  # Linux native code
+├── electron/               # Electron main process
+├── public/                 # Web assets
 ├── package.json
 ├── setup.sh               # Automated setup script
 ├── test-app.sh            # Test script
@@ -143,38 +115,20 @@ CommandKit/
 
 ## Available Scripts
 
-- `npm start` - Start Metro bundler (for development)
-- `npm run macos` - Run on macOS (development)
-- `npm run windows` - Run on Windows (development)
-- `npm run linux` - Run on Linux (development)
+- `npm run dev` - Start development server
+- `npm run electron-pack` - Build Electron app for all platforms
 - `npm run build:macos` - Build standalone app for macOS
 - `npm run build:windows` - Build standalone app for Windows
 - `npm run build:linux` - Build standalone app for Linux
+- `npm run test:compose:all` - Test all platform builds with Docker
 
-## Why the iOS Folder Exists
 
-React Native macOS is built on top of React Native iOS. The iOS folder contains:
-
-- **AppDelegate.mm**: Application lifecycle management
-- **Info.plist**: Application configuration and permissions
-- **main.m**: Application entry point
-- **Podfile**: CocoaPods dependency management
-- **project.pbxproj**: Xcode project configuration
-
-This shared foundation allows the same codebase to run on both iOS and macOS with native performance.
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Metro bundler issues:**
-
-   ```bash
-   # Clear Metro cache
-   npx react-native start --reset-cache
-   ```
-
-2. **Native build issues:**
+1. **Build issues:**
 
    ```bash
    # Clean and rebuild
@@ -182,21 +136,20 @@ This shared foundation allows the same codebase to run on both iOS and macOS wit
    npm install
    ```
 
-3. **Permission issues on macOS:**
+2. **Electron issues:**
 
    ```bash
-   # Fix CocoaPods permissions
-   sudo gem install cocoapods
+   # Clear Electron cache
+   rm -rf node_modules/.cache
+   npm install
    ```
 
-4. **TypeScript errors:**
-   - The tsconfig.json has been configured for React Native
+3. **TypeScript errors:**
    - Ensure all dependencies are installed: `npm install`
 
 ### Getting Help
 
-- Check the [React Native documentation](https://reactnative.dev/)
-- Check the [React Native macOS documentation](https://github.com/microsoft/react-native-macos)
+- Check the [Electron documentation](https://www.electronjs.org/docs)
 - Review existing GitHub issues
 - Create a new issue with detailed error information
 
@@ -205,38 +158,26 @@ This shared foundation allows the same codebase to run on both iOS and macOS wit
 CommandKit is designed as an umbrella application that manages multiple developer tools:
 
 - **Centralized Management**: All tools are managed through a single interface
-- **Cross-platform**: Built with React Native for native performance across platforms
+- **Cross-platform**: Built with Electron for cross-platform compatibility
 - **Modular Design**: Each tool is a separate module that can be downloaded and updated independently
-- **Native Integration**: Uses platform-specific APIs for file system operations and process management
+- **Web-based UI**: Uses React for the user interface
 
 The application uses:
 
-- React Native for the UI framework
-- React Native FS for file system operations
-- AsyncStorage for local data persistence
-- Platform-specific native modules for system integration
+- Electron for cross-platform desktop app framework
+- React for the UI framework
+- Node.js for file system operations and process management
+- Local storage for data persistence
 
 ## Distribution
 
 ### Creating Installers
 
-After building standalone applications, you can create installers:
+After building standalone applications, you can create installers using `electron-builder`:
 
-#### macOS
-
-- Use `create-dmg` to create a `.dmg` file
-- Or use `electron-builder` for more advanced packaging
-
-#### Windows
-
-- Use `electron-builder` to create `.msi` or `.exe` installers
-- Or use `innosetup` for custom installers
-
-#### Linux
-
-- Create `.deb` packages for Debian/Ubuntu
-- Create `.rpm` packages for Red Hat/Fedora
-- Or use `AppImage` for universal distribution
+- **Windows**: Creates `.exe` installers and portable executables
+- **macOS**: Creates `.dmg` files and `.app` bundles
+- **Linux**: Creates `.AppImage` and `.snap` packages
 
 ## Contributing
 
@@ -255,7 +196,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 If you encounter issues:
 
 1. Check the troubleshooting section above
-2. Review the [React Native documentation](https://reactnative.dev/)
+2. Review the [Electron documentation](https://www.electronjs.org/docs)
 3. Search existing GitHub issues
 4. Create a new issue with detailed error information
 
@@ -267,4 +208,4 @@ Once you have CommandKit running:
 2. Test downloading and running ReqGen and MacroBoard
 3. Customize the UI and functionality as needed
 4. Add new projects to the umbrella application
-5. Build and distribute standalone applications
+5. Build and distribute applications for all platforms
