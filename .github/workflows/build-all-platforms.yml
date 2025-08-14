@@ -28,11 +28,27 @@ jobs:
       - name: Build for macOS
         run: npm run build:macos
 
+      - name: Self-sign macOS app
+        run: |
+          APP_PATH="$(find dist/mac* -name '*.app' -maxdepth 2 | head -n 1)"
+          if [ -n "$APP_PATH" ]; then
+            echo "Self-signing $APP_PATH"
+            codesign --deep --force --sign - "$APP_PATH"
+          else
+            echo "No .app found in dist/ to sign"
+            exit 1
+          fi
+
+      - name: Create ZIP of macOS build
+        run: |
+          cd dist
+          zip -r macos-build.zip .
+
       - name: Upload macOS build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: dist/
+          path: dist/macos-build.zip
           retention-days: 7
 
   build-windows:
@@ -52,24 +68,35 @@ jobs:
       - name: Build for Windows
         run: npm run build:windows
 
-      - name: Upload Windows build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build
-          path: dist/
-          retention-days: 7
-
-      - name: Test Windows executable
+      - name: Test Windows executable exists
         run: |
           if (Test-Path "dist\win-unpacked\CommandKit.exe") {
             Write-Host "✅ Windows executable created successfully"
             Get-ChildItem "dist\win-unpacked\CommandKit.exe" | Select-Object Name, Length, LastWriteTime
           } else {
             Write-Host "❌ Windows executable not found"
-            Write-Host "Available files in dist:"
-            Get-ChildItem "dist\" -Recurse | Select-Object FullName
             exit 1
           }
+
+      - name: Self-sign Windows executable (test only)
+        run: |
+          $exePath = "dist\win-unpacked\CommandKit.exe"
+          if (Test-Path $exePath) {
+            Write-Host "Self-signing Windows EXE..."
+            signtool sign /a /fd SHA256 /f NUL $exePath
+          }
+
+      - name: Create ZIP of Windows build
+        run: |
+          cd dist
+          powershell Compress-Archive -Path * -DestinationPath windows-build.zip
+
+      - name: Upload Windows build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: dist/windows-build.zip
+          retention-days: 7
 
   build-linux:
     runs-on: ubuntu-latest
@@ -88,11 +115,23 @@ jobs:
       - name: Build for Linux
         run: npm run build:linux
 
+      - name: Self-sign Linux build (GPG)
+        run: |
+          if compgen -G "dist/*.AppImage" > /dev/null; then
+            echo "Signing AppImage..."
+            for f in dist/*.AppImage; do gpg --batch --yes --passphrase "" --output "$f.sig" --detach-sig "$f"; done
+          fi
+
+      - name: Create ZIP of Linux build
+        run: |
+          cd dist
+          zip -r linux-build.zip .
+
       - name: Upload Linux build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: dist/
+          path: dist/linux-build.zip
           retention-days: 7
 
   test-web:
@@ -112,9 +151,14 @@ jobs:
       - name: Build web version
         run: npm run webpack
 
+      - name: Create ZIP of web build
+        run: |
+          cd build
+          zip -r ../web-build.zip .
+
       - name: Upload web build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: web-build
-          path: build/
+          path: web-build.zip
           retention-days: 7
