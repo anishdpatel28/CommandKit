@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+web-build/
+web-simple/
+
+# Artifacts
+artifacts/
+
+# Electron build files
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.AppImage
+*.exe
+*.msi
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Package files
+package-lock.json
+
+# Large files
+*.zip
+*.tar.gz
+
+# Public assets (if they contain large files)
+public/assets/
+public/images/
+
+# Test artifacts
+test-results/
+playwright-report/

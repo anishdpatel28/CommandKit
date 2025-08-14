@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { colors } from '../theme/colors';
-import { ProjectManager } from '../services/ProjectManager';
+import { colors } from "../theme/colors";
+import { ProjectManager } from "../services/ProjectManager";
 
 interface MacroBoardStatus {
   installed: boolean;
@@ -23,8 +23,8 @@ interface MacroBoardStatus {
 const MacroBoardTab = () => {
   const [status, setStatus] = useState<MacroBoardStatus>({
     installed: false,
-    version: '',
-    lastUpdated: '',
+    version: "",
+    lastUpdated: "",
     isRunning: false,
   });
   const [loading, setLoading] = useState(false);
@@ -35,21 +35,24 @@ const MacroBoardTab = () => {
 
   const loadMacroBoardStatus = async () => {
     try {
-      const storedStatus = await AsyncStorage.getItem('macroboard_status');
+      const storedStatus = await AsyncStorage.getItem("macroboard_status");
       if (storedStatus) {
         setStatus(JSON.parse(storedStatus));
       }
     } catch (error) {
-      console.error('Error loading MacroBoard status:', error);
+      console.error("Error loading MacroBoard status:", error);
     }
   };
 
   const saveMacroBoardStatus = async (newStatus: MacroBoardStatus) => {
     try {
-      await AsyncStorage.setItem('macroboard_status', JSON.stringify(newStatus));
+      await AsyncStorage.setItem(
+        "macroboard_status",
+        JSON.stringify(newStatus)
+      );
       setStatus(newStatus);
     } catch (error) {
-      console.error('Error saving MacroBoard status:', error);
+      console.error("Error saving MacroBoard status:", error);
     }
   };
 
@@ -57,22 +60,22 @@ const MacroBoardTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.downloadProject('macroboard');
+      const result = await projectManager.downloadProject("macroboard");
 
       if (result.success) {
         const newStatus = {
           installed: true,
-          version: result.version || '1.0.0',
+          version: result.version || "1.0.0",
           lastUpdated: new Date().toISOString(),
           isRunning: false,
         };
         await saveMacroBoardStatus(newStatus);
-        Alert.alert('Success', 'MacroBoard downloaded successfully!');
+        Alert.alert("Success", "MacroBoard downloaded successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to download MacroBoard');
+        Alert.alert("Error", result.error || "Failed to download MacroBoard");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to download MacroBoard');
+      Alert.alert("Error", "Failed to download MacroBoard");
     } finally {
       setLoading(false);
     }
@@ -82,7 +85,7 @@ const MacroBoardTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.updateProject('macroboard');
+      const result = await projectManager.updateProject("macroboard");
 
       if (result.success) {
         const newStatus = {
@@ -91,12 +94,12 @@ const MacroBoardTab = () => {
           lastUpdated: new Date().toISOString(),
         };
         await saveMacroBoardStatus(newStatus);
-        Alert.alert('Success', 'MacroBoard updated successfully!');
+        Alert.alert("Success", "MacroBoard updated successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to update MacroBoard');
+        Alert.alert("Error", result.error || "Failed to update MacroBoard");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to update MacroBoard');
+      Alert.alert("Error", "Failed to update MacroBoard");
     } finally {
       setLoading(false);
     }
@@ -104,24 +107,24 @@ const MacroBoardTab = () => {
 
   const handleRun = async () => {
     if (!status.installed) {
-      Alert.alert('Error', 'Please download MacroBoard first');
+      Alert.alert("Error", "Please download MacroBoard first");
       return;
     }
 
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.runProject('macroboard');
+      const result = await projectManager.runProject("macroboard");
 
       if (result.success) {
         const newStatus = { ...status, isRunning: true };
         await saveMacroBoardStatus(newStatus);
-        Alert.alert('Success', 'MacroBoard is now running!');
+        Alert.alert("Success", "MacroBoard is now running!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to run MacroBoard');
+        Alert.alert("Error", result.error || "Failed to run MacroBoard");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to run MacroBoard');
+      Alert.alert("Error", "Failed to run MacroBoard");
     } finally {
       setLoading(false);
     }
@@ -131,17 +134,17 @@ const MacroBoardTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.stopProject('macroboard');
+      const result = await projectManager.stopProject("macroboard");
 
       if (result.success) {
         const newStatus = { ...status, isRunning: false };
         await saveMacroBoardStatus(newStatus);
-        Alert.alert('Success', 'MacroBoard stopped successfully!');
+        Alert.alert("Success", "MacroBoard stopped successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to stop MacroBoard');
+        Alert.alert("Error", result.error || "Failed to stop MacroBoard");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to stop MacroBoard');
+      Alert.alert("Error", "Failed to stop MacroBoard");
     } finally {
       setLoading(false);
     }
@@ -163,7 +166,7 @@ const MacroBoardTab = () => {
           <Text style={styles.statusLabel}>Installed:</Text>
           <View style={styles.statusValue}>
             <Icon
-              name={status.installed ? 'check-circle' : 'cancel'}
+              name={status.installed ? "check-circle" : "cancel"}
               size={20}
               color={status.installed ? colors.success : colors.error}
             />
@@ -171,8 +174,9 @@ const MacroBoardTab = () => {
               style={[
                 styles.statusText,
                 { color: status.installed ? colors.success : colors.error },
-              ]}>
-              {status.installed ? 'Yes' : 'No'}
+              ]}
+            >
+              {status.installed ? "Yes" : "No"}
             </Text>
           </View>
         </View>
@@ -192,18 +196,23 @@ const MacroBoardTab = () => {
               <Text style={styles.statusLabel}>Running:</Text>
               <View style={styles.statusValue}>
                 <Icon
-                  name={status.isRunning ? 'play-circle' : 'stop-circle'}
+                  name={status.isRunning ? "play-circle" : "stop-circle"}
                   size={20}
-                  color={status.isRunning ? colors.success : colors.textSecondary}
+                  color={
+                    status.isRunning ? colors.success : colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.statusText,
                     {
-                      color: status.isRunning ? colors.success : colors.textSecondary,
+                      color: status.isRunning
+                        ? colors.success
+                        : colors.textSecondary,
                     },
-                  ]}>
-                  {status.isRunning ? 'Yes' : 'No'}
+                  ]}
+                >
+                  {status.isRunning ? "Yes" : "No"}
                 </Text>
               </View>
             </View>
@@ -216,7 +225,8 @@ const MacroBoardTab = () => {
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
             onPress={handleDownload}
-            disabled={loading}>
+            disabled={loading}
+          >
             {loading ? (
               <ActivityIndicator color="white" />
             ) : (
@@ -231,7 +241,8 @@ const MacroBoardTab = () => {
             <TouchableOpacity
               style={[styles.button, styles.secondaryButton]}
               onPress={handleUpdate}
-              disabled={loading}>
+              disabled={loading}
+            >
               {loading ? (
                 <ActivityIndicator color={colors.primary} />
               ) : (
@@ -248,7 +259,8 @@ const MacroBoardTab = () => {
               <TouchableOpacity
                 style={[styles.button, styles.primaryButton]}
                 onPress={handleRun}
-                disabled={loading}>
+                disabled={loading}
+              >
                 {loading ? (
                   <ActivityIndicator color="white" />
                 ) : (
@@ -262,7 +274,8 @@ const MacroBoardTab = () => {
               <TouchableOpacity
                 style={[styles.button, styles.errorButton]}
                 onPress={handleStop}
-                disabled={loading}>
+                disabled={loading}
+              >
                 {loading ? (
                   <ActivityIndicator color="white" />
                 ) : (
@@ -285,19 +298,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginTop: 10,
   },
   description: {
     fontSize: 16,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 5,
     paddingHorizontal: 20,
   },
@@ -317,14 +330,14 @@ const styles = StyleSheet.create({
   },
   statusTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginBottom: 15,
   },
   statusRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   statusLabel: {
@@ -332,21 +345,21 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   statusValue: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   statusText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 5,
   },
   actionsContainer: {
     gap: 15,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -372,7 +385,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.white,
     marginLeft: 8,
   },

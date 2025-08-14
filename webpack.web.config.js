@@ -1,12 +1,12 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: 'development',
-  entry: './src/index.web.tsx',
+  mode: "development",
+  entry: "./src/index.web.tsx",
   output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, "build"),
+    filename: "bundle.js",
     clean: true,
   },
   module: {
@@ -15,51 +15,51 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'ts-loader',
+          loader: "ts-loader",
           options: {
-            configFile: 'tsconfig.web.json'
-          }
-        }
+            configFile: "tsconfig.web.json",
+          },
+        },
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: [".tsx", ".ts", ".js"],
     fallback: {
-      "fs": false,
-      "path": false,
-      "os": false,
-      "crypto": false,
-      "stream": false,
-      "util": false,
-      "buffer": false,
-      "events": false,
-      "assert": false,
-      "constants": false,
-      "domain": false,
-      "punycode": false,
-      "querystring": false,
-      "string_decoder": false,
-      "sys": false,
-      "timers": false,
-      "tty": false,
-      "url": false,
-      "vm": false,
-      "zlib": false
-    }
+      fs: false,
+      path: false,
+      os: false,
+      crypto: false,
+      stream: false,
+      util: false,
+      buffer: false,
+      events: false,
+      assert: false,
+      constants: false,
+      domain: false,
+      punycode: false,
+      querystring: false,
+      string_decoder: false,
+      sys: false,
+      timers: false,
+      tty: false,
+      url: false,
+      vm: false,
+      zlib: false,
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: "./public/index.html",
     }),
   ],
   devServer: {
     static: {
-      directory: path.join(__dirname, 'build'),
+      directory: path.join(__dirname, "build"),
     },
     compress: true,
     port: 3001,
@@ -69,6 +69,6 @@ module.exports = {
   },
   ignoreWarnings: [/Failed to parse source map/],
   externals: {
-    'react-native': 'ReactNative',
+    "react-native": "ReactNative",
   },
 };

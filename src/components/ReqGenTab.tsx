@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { colors } from '../theme/colors';
-import { ProjectManager } from '../services/ProjectManager';
+import { colors } from "../theme/colors";
+import { ProjectManager } from "../services/ProjectManager";
 
 interface ReqGenStatus {
   installed: boolean;
@@ -23,8 +23,8 @@ interface ReqGenStatus {
 const ReqGenTab = () => {
   const [status, setStatus] = useState<ReqGenStatus>({
     installed: false,
-    version: '',
-    lastUpdated: '',
+    version: "",
+    lastUpdated: "",
     isRunning: false,
   });
   const [loading, setLoading] = useState(false);
@@ -35,21 +35,21 @@ const ReqGenTab = () => {
 
   const loadReqGenStatus = async () => {
     try {
-      const storedStatus = await AsyncStorage.getItem('reqgen_status');
+      const storedStatus = await AsyncStorage.getItem("reqgen_status");
       if (storedStatus) {
         setStatus(JSON.parse(storedStatus));
       }
     } catch (error) {
-      console.error('Error loading ReqGen status:', error);
+      console.error("Error loading ReqGen status:", error);
     }
   };
 
   const saveReqGenStatus = async (newStatus: ReqGenStatus) => {
     try {
-      await AsyncStorage.setItem('reqgen_status', JSON.stringify(newStatus));
+      await AsyncStorage.setItem("reqgen_status", JSON.stringify(newStatus));
       setStatus(newStatus);
     } catch (error) {
-      console.error('Error saving ReqGen status:', error);
+      console.error("Error saving ReqGen status:", error);
     }
   };
 
@@ -57,22 +57,22 @@ const ReqGenTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.downloadProject('reqgen');
+      const result = await projectManager.downloadProject("reqgen");
 
       if (result.success) {
         const newStatus = {
           installed: true,
-          version: result.version || '1.0.0',
+          version: result.version || "1.0.0",
           lastUpdated: new Date().toISOString(),
           isRunning: false,
         };
         await saveReqGenStatus(newStatus);
-        Alert.alert('Success', 'ReqGen downloaded successfully!');
+        Alert.alert("Success", "ReqGen downloaded successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to download ReqGen');
+        Alert.alert("Error", result.error || "Failed to download ReqGen");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to download ReqGen');
+      Alert.alert("Error", "Failed to download ReqGen");
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ const ReqGenTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.updateProject('reqgen');
+      const result = await projectManager.updateProject("reqgen");
 
       if (result.success) {
         const newStatus = {
@@ -91,12 +91,12 @@ const ReqGenTab = () => {
           lastUpdated: new Date().toISOString(),
         };
         await saveReqGenStatus(newStatus);
-        Alert.alert('Success', 'ReqGen updated successfully!');
+        Alert.alert("Success", "ReqGen updated successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to update ReqGen');
+        Alert.alert("Error", result.error || "Failed to update ReqGen");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to update ReqGen');
+      Alert.alert("Error", "Failed to update ReqGen");
     } finally {
       setLoading(false);
     }
@@ -104,24 +104,24 @@ const ReqGenTab = () => {
 
   const handleRun = async () => {
     if (!status.installed) {
-      Alert.alert('Error', 'Please download ReqGen first');
+      Alert.alert("Error", "Please download ReqGen first");
       return;
     }
 
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.runProject('reqgen');
+      const result = await projectManager.runProject("reqgen");
 
       if (result.success) {
         const newStatus = { ...status, isRunning: true };
         await saveReqGenStatus(newStatus);
-        Alert.alert('Success', 'ReqGen is now running!');
+        Alert.alert("Success", "ReqGen is now running!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to run ReqGen');
+        Alert.alert("Error", result.error || "Failed to run ReqGen");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to run ReqGen');
+      Alert.alert("Error", "Failed to run ReqGen");
     } finally {
       setLoading(false);
     }
@@ -131,17 +131,17 @@ const ReqGenTab = () => {
     setLoading(true);
     try {
       const projectManager = new ProjectManager();
-      const result = await projectManager.stopProject('reqgen');
+      const result = await projectManager.stopProject("reqgen");
 
       if (result.success) {
         const newStatus = { ...status, isRunning: false };
         await saveReqGenStatus(newStatus);
-        Alert.alert('Success', 'ReqGen stopped successfully!');
+        Alert.alert("Success", "ReqGen stopped successfully!");
       } else {
-        Alert.alert('Error', result.error || 'Failed to stop ReqGen');
+        Alert.alert("Error", result.error || "Failed to stop ReqGen");
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to stop ReqGen');
+      Alert.alert("Error", "Failed to stop ReqGen");
     } finally {
       setLoading(false);
     }
@@ -163,7 +163,7 @@ const ReqGenTab = () => {
           <Text style={styles.statusLabel}>Installed:</Text>
           <View style={styles.statusValue}>
             <Icon
-              name={status.installed ? 'check-circle' : 'cancel'}
+              name={status.installed ? "check-circle" : "cancel"}
               size={20}
               color={status.installed ? colors.success : colors.error}
             />
@@ -171,8 +171,9 @@ const ReqGenTab = () => {
               style={[
                 styles.statusText,
                 { color: status.installed ? colors.success : colors.error },
-              ]}>
-              {status.installed ? 'Yes' : 'No'}
+              ]}
+            >
+              {status.installed ? "Yes" : "No"}
             </Text>
           </View>
         </View>
@@ -192,18 +193,23 @@ const ReqGenTab = () => {
               <Text style={styles.statusLabel}>Running:</Text>
               <View style={styles.statusValue}>
                 <Icon
-                  name={status.isRunning ? 'play-circle' : 'stop-circle'}
+                  name={status.isRunning ? "play-circle" : "stop-circle"}
                   size={20}
-                  color={status.isRunning ? colors.success : colors.textSecondary}
+                  color={
+                    status.isRunning ? colors.success : colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     styles.statusText,
                     {
-                      color: status.isRunning ? colors.success : colors.textSecondary,
+                      color: status.isRunning
+                        ? colors.success
+                        : colors.textSecondary,
                     },
-                  ]}>
-                  {status.isRunning ? 'Yes' : 'No'}
+                  ]}
+                >
+                  {status.isRunning ? "Yes" : "No"}
                 </Text>
               </View>
             </View>
@@ -216,7 +222,8 @@ const ReqGenTab = () => {
           <TouchableOpacity
             style={[styles.button, styles.primaryButton]}
             onPress={handleDownload}
-            disabled={loading}>
+            disabled={loading}
+          >
             {loading ? (
               <ActivityIndicator color="white" />
             ) : (
@@ -231,7 +238,8 @@ const ReqGenTab = () => {
             <TouchableOpacity
               style={[styles.button, styles.secondaryButton]}
               onPress={handleUpdate}
-              disabled={loading}>
+              disabled={loading}
+            >
               {loading ? (
                 <ActivityIndicator color={colors.primary} />
               ) : (
@@ -248,7 +256,8 @@ const ReqGenTab = () => {
               <TouchableOpacity
                 style={[styles.button, styles.primaryButton]}
                 onPress={handleRun}
-                disabled={loading}>
+                disabled={loading}
+              >
                 {loading ? (
                   <ActivityIndicator color="white" />
                 ) : (
@@ -262,7 +271,8 @@ const ReqGenTab = () => {
               <TouchableOpacity
                 style={[styles.button, styles.errorButton]}
                 onPress={handleStop}
-                disabled={loading}>
+                disabled={loading}
+              >
                 {loading ? (
                   <ActivityIndicator color="white" />
                 ) : (
@@ -285,19 +295,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginTop: 10,
   },
   description: {
     fontSize: 16,
     color: colors.textSecondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 5,
     paddingHorizontal: 20,
   },
@@ -317,14 +327,14 @@ const styles = StyleSheet.create({
   },
   statusTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.text,
     marginBottom: 15,
   },
   statusRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   statusLabel: {
@@ -332,21 +342,21 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
   },
   statusValue: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   statusText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginLeft: 5,
   },
   actionsContainer: {
     gap: 15,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -372,7 +382,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: colors.white,
     marginLeft: 8,
   },
