@@ -26,14 +26,7 @@ jobs:
         run: npm ci
 
       - name: Build for macOS
-        run: npm run electron-pack -- --mac --publish never
-
-      - name: Remove quarantine attribute
-        run: |
-          if [ -d "dist/macos/CommandKit.app" ]; then
-            xattr -rd com.apple.quarantine dist/macos/CommandKit.app
-            echo "✅ Removed quarantine attribute from CommandKit.app"
-          fi
+        run: npm run build:macos
 
       - name: Upload macOS build artifacts
         uses: actions/upload-artifact@v4
@@ -57,7 +50,7 @@ jobs:
         run: npm ci
 
       - name: Build for Windows
-        run: npm run electron-pack -- --win --publish never
+        run: npm run build:windows
 
       - name: Upload Windows build artifacts
         uses: actions/upload-artifact@v4
@@ -93,7 +86,7 @@ jobs:
         run: npm ci
 
       - name: Build for Linux
-        run: npm run electron-pack -- --linux --publish never
+        run: npm run build:linux
 
       - name: Upload Linux build artifacts
         uses: actions/upload-artifact@v4
