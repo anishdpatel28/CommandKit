@@ -78,14 +78,6 @@ jobs:
             exit 1
           }
 
-      - name: Self-sign Windows executable (test only)
-        run: |
-          $exePath = "dist\win-unpacked\CommandKit.exe"
-          if (Test-Path $exePath) {
-            Write-Host "Self-signing Windows EXE..."
-            signtool sign /a /fd SHA256 /f NUL $exePath
-          }
-
       - name: Create ZIP of Windows build
         run: |
           cd dist
