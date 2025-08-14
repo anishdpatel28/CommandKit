@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+      - "v*-alpha*"
+      - "v*-beta*"
+      - "v*-rc*"
+      - "v*-dev*"
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-all-platforms:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+            platforms: "macos windows"
+          - os: ubuntu-latest
+            platforms: "linux"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build all platforms
+        run: |
+          if [ "${{ matrix.platforms }}" = "macos windows" ]; then
+            npm run build:macos
+            npm run build:windows
+          elif [ "${{ matrix.platforms }}" = "linux" ]; then
+            npm run build:linux
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: builds-${{ matrix.os }}
+          path: dist/
+          retention-days: 30
+
+  create-release:
+    needs: build-all-platforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/builds-macos-latest/**/*
+            artifacts/builds-ubuntu-latest/**/*
+          draft: false
+          prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') || contains(github.ref, '-dev') }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
